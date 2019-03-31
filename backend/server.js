@@ -1,4 +1,3 @@
-"use strict"
 require('dotenv').config()
 const express = require('express')
 const app = express()
@@ -15,7 +14,7 @@ app.use(bodyParser.json());
 app.use('/recipes', RecipeRoutes)
 
 app.get('/', (req, res) => {
-    res.send(process.env.YummlyID)
+    res.send(process.env.YummlyId)
 })
 
 app.get('*', (req, res) => {
