@@ -1,5 +1,8 @@
 
 const RecipeController = {
+    getWeeklyRecipes: (searchObject) => {
+
+    }
     
   }
   

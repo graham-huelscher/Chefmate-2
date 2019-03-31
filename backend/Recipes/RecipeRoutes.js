@@ -6,6 +6,11 @@ router.get('/', (req, res) => {
     res.json({recipes: "recipes"});
 })
 
+router.get('/:id', (req, res) => {
+    const { id }  = req.params
+    res.json({recipes: `Recipe with id ${id}`});
+})
+
 router.post('/', (req, res) => {
     
 })
