@@ -1,19 +1,24 @@
-const store = require('store')
+const store = require('../store')
 const YummlyAxios = require('../YummlyAxios')
 
-function set_metadata(metadataTitle, metadata) {
-    console.log(metadataTitle);
-}
+const metadataTitles = ['ingredient','allergy','diet','cuisine']
 
 const MetadataController = {
     getIngredients: () => {
 
-        YummlyAxios.get('metadata/ingredient?').then(res => {
-            let ingredients = MetadataController.parseData(res);
-
-            store.set('ingredients', ingredients)
+        if(!store.get('ingredients')){
+            console.log("executing api call")
+            YummlyAxios.get('metadata/ingredient?').then(res => {
+                let ingredients = MetadataController.parseData(res);
+    
+                store.set('ingredients', ingredients)
+                console.log(store.get('ingredients')[0])
+            })
+        }
+        else 
             console.log(store.get('ingredients')[0])
-        })
+
+        
     },
 
     parseData: (res) => {
