@@ -13,10 +13,6 @@ app.use(bodyParser.json());
   // Routes
 app.use('/recipes', RecipeRoutes)
 
-app.get('/', (req, res) => {
-    res.send(process.env.YummlyId)
-})
-
 app.get('*', (req, res) => {
     res.send('Wrong pathway');
 })

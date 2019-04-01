@@ -1,18 +1,11 @@
-const axios = require('axios');
-
-const yummlyAxios = axios.create({
-    baseURL: 'http://api.yummly.com/v1/api/',
-    timeout: 10000,
-    headers: {
-        'X-Yummly-App-ID': process.env.YummlyId,
-        'X-Yummly-App-Key': process.env.YummlyKey
-    }
-});
+const YummlyAxios = require('../YummlyAxios')
+const MetadataController = require('../Metadata/MetadataController')
 
 const RecipeController = {
     getWeeklyRecipes: (searchObject) => {
         return new Promise((resolve, reject) => {
-            yummlyAxios.get('recipes?')
+            MetadataController.getIngredients();
+            YummlyAxios.get('recipes?')
                 .catch(error => console.log(error.response))
                 .then(results => resolve(results.data.matches))
         })
