@@ -1,40 +1,66 @@
-const store = require('../store')
 const YummlyAxios = require('../YummlyAxios')
+const { Cuisines, Allergies, Diets, Ingredients } = require('./MetadataSchemas')
 
-const metadataTitles = ['ingredient', 'cuisine', 'allergy', 'diet']
+const test = require('./MetadataSchemas/test')
+
+const metadataSchemas = {
+    'cuisine': Cuisines,
+    'allergy': Allergies,
+    'diet': Diets,
+    'ingredient': Ingredients
+}
 
 const MetadataController = {
-    getMetadata: () => {
+    getMetadata: async () => {
 
-        metadataTitles.forEach(title => {
+        const missingMetadataSchemas = await MetadataController.filterMetadataSchemas()
 
-            let ifModifedSince = {}
+        for (let title in missingMetadataSchemas) {
 
-            if (store.get(title)) {
-                ifModifedSince = {'headers': {'If-Modified-Since': store.getTime(title)}}
-            }
+            // let ifModifedSince = {}
 
-            console.log(ifModifedSince)
+            // if (store.get(title)) {
+            //     ifModifedSince = {'headers': {'If-Modified-Since': store.getTime(title)}}
+            // }
 
-            YummlyAxios.get(`metadata/${title}`, ifModifedSince).then(res => {
+            // console.log(ifModifedSince)
+
+            YummlyAxios.get(`metadata/${title}`).then(res => {
                 let data = MetadataController.parseData(res, title);
 
-                store.set(title, data)
-                console.log(store.get(title)[0])
+                MetadataController.addDataToAppropriateDBCollection(title, data);
+
             })
-
-
-        })
-
-
-
-
+        }
     },
+    filterMetadataSchemas: async () => {
 
+        const values = await Promise.all([Cuisines.find({}), Allergies.find({}), Diets.find({}), Ingredients.find({})])
+
+        let valuesIndex = 0;
+        const metadataSchemasCopy = Object.assign({}, metadataSchemas)
+        for (let title in metadataSchemas) {
+            if (values[valuesIndex].length) {
+                console.log(`${title} already in database`)
+                delete metadataSchemasCopy[title]
+            }
+            valuesIndex++;
+        }
+        return metadataSchemasCopy
+    },
     parseData: (res, title) => {
         let dataStr = res.data.replace(`set_metadata('${title}', `, '');
         dataStr = dataStr.replace(');', '');
         return JSON.parse(dataStr);
+    },
+    addDataToAppropriateDBCollection: (title, data) => {
+        metadataSchemas[title].insertMany(data, { ordered: false })
+            .then(dbArr => {
+                console.log(`${title} metadata added to database`)
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 }
 
