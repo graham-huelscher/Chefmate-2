@@ -3,15 +3,17 @@ const express = require('express')
 const router = express.Router()
 const RecipeController  = require('./RecipeController')
 
-router.get('/', (req, res) => {
-    RecipeController
-        .getWeeklyRecipes({ 'test': null })
-        .then(recipes => res.json(recipes))
+router.get('/', async (req, res) => {
+
+    const weeklyRecipes = await RecipeController.getWeeklyRecipes({ 'test': null })
+    res.json(weeklyRecipes)
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     const { id } = req.params
-    res.json({ recipes: `Recipe with id ${id}` });
+
+    const recipeData = await RecipeController.getRecipeDetails(id)
+    res.json(recipeData)
 })
 
 router.post('/', (req, res) => {

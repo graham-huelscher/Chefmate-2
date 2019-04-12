@@ -8,7 +8,7 @@ const mongoose = require('./Config/MongoDBConnection')
 const MetadataController = require('./Metadata/MetadataController')
 const { RecipeRoutes } = require('./Recipes')
 
-MetadataController.getMetadata();
+//MetadataController.getMetadata();
 
 // Middleware
 app.use(bodyParser.json());
