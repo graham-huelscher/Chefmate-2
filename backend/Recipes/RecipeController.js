@@ -12,6 +12,7 @@ const searchObject = {
 
 let searchString = `recipes?&maxResult=100`
 
+//recipes?_app_id=YOUR_ID&_app_key=YOUR_APP_KEY&q=onion+soup&allowedIngredient[]=garlic&allowedIngredient[]=cognac
 
 const RecipeController = {
     getWeeklyRecipes: (SO) => {
