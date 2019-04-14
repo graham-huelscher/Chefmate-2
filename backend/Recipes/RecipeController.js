@@ -1,4 +1,5 @@
 const YummlyAxios = require('../Config/YummlyAxios')
+const RecipeStringHelper = require('./RecipeStringHelper')
 
 const searchObject = {
     requiredMeals: {
@@ -6,8 +7,13 @@ const searchObject = {
         lunch: true,
         snack: true,
         dinner: true,
+        side: true,
         dessert: true
     }
+}
+
+const apiCallsObject = {
+
 }
 
 let searchString = `recipes?&maxResult=100`
@@ -21,6 +27,7 @@ const RecipeController = {
             const requiredMeals = Object.assign({}, searchObject.requiredMeals)
 
             let searchString = `recipes?&maxResult=100`
+            console.log(RecipeStringHelper.arrayCombine(['Seafood', 'Peanut'], 'allowedAllergies'))
 
             resolve(requiredMeals)
 
@@ -37,7 +44,6 @@ const RecipeController = {
 
     getRecipeDetails: async (id) => {
         let response = await YummlyAxios.get(`recipe/${id}`)
-        //console.log(response.data.attribution)
         return response.data
     }
 
